@@ -1,24 +1,33 @@
 import random
 from datetime import datetime
 import json
+import random
+
 
 def generate_date():
-    random_date = datetime.strptime('{} {}'.format(random.randint(1, 366), 2024), '%j %Y')
+    years = [2021, 2019, 2018, 2017, 2016, 2015, 2022, 2023, 2024]
+    random_date = datetime.strptime('{} {}'.format(
+        random.randint(1, 366),  random.choice(years)), '%j %Y')
     formatted_date = random_date.strftime('%d/%m/%Y')
     print(f"Generated Date: {formatted_date}")
     return 'émise le '+formatted_date
 
+
 def generate_firstname():
-    first_names = ["James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth", "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen"]
+    first_names = ["James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William",
+                   "Elizabeth", "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen"]
     random_first_name = random.choice(first_names)
     print(f"Generated First Name: {random_first_name}")
     return random_first_name
 
+
 def generate_lastname():
-    last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"]
+    last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
+                  "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"]
     random_last_name = random.choice(last_names)
     print(f"Generated Last Name: {random_last_name}")
     return random_last_name
+
 
 def generate_insurance_code():
     parts = [
@@ -34,6 +43,7 @@ def generate_insurance_code():
     print(f"Generated Insurance Code: {insurance_code}")
     return insurance_code
 
+
 def generate_card_id():
     part1 = ''.join(str(random.randint(0, 9)) for _ in range(10))
     part2 = ''.join(str(random.randint(0, 9)) for _ in range(10))
@@ -42,6 +52,7 @@ def generate_card_id():
     card_id = f"{part1} {part2} {part3}"
     print(f"Generated Card ID: {card_id}")
     return card_id
+
 
 def read_json_from_path(file_path):
     try:
@@ -53,6 +64,7 @@ def read_json_from_path(file_path):
         print(f"Error reading file {file_path}: {e}")
         return str(e)
 
+
 def add_key_to_values(json_data, key, value):
     for annotation in json_data[0]['annotations']:
         for result in annotation['result']:
@@ -61,13 +73,15 @@ def add_key_to_values(json_data, key, value):
                 print(f"Added {key}: {value}")
     return json_data
 
+
 def generate_dict_with_replacement(path):
     d_json = read_json_from_path(path)
 
     d_json = add_key_to_values(d_json, 'Date', generate_date())
     d_json = add_key_to_values(d_json, 'LastName', generate_lastname())
     d_json = add_key_to_values(d_json, 'FirstName', generate_firstname())
-    d_json = add_key_to_values(d_json, 'InsuranceCode', generate_insurance_code())
+    d_json = add_key_to_values(
+        d_json, 'InsuranceCode', generate_insurance_code())
     d_json = add_key_to_values(d_json, 'cardId', generate_card_id())
     return d_json
 
