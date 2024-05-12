@@ -5,6 +5,7 @@ import streamlit as st
 import os
 from PIL import Image
 
+
 def generate_carte_vitale_images(number_of_images):
     image_path = 'carte_vitale.jpg'
     json_path = 'carte_vitale.json'
@@ -15,6 +16,20 @@ def generate_carte_vitale_images(number_of_images):
         save_status = utils.save_pil_image(image)
         print(save_status)
 
+
+def gemerate_residence_card_images(number_of_images):
+    image_path = 'titre_sej_n.jpg'
+    json_path = 'titre_sej.json'
+    for i in range(number_of_images):
+        print(f"Generating image {i+1}")
+        d_json = generator.generate_dict_with_replacement_carte_resid(
+            json_path)
+        image = utils.create_text_on_image(
+            image_path, d_json, 25, pad=(0, 0, 0, 5))
+        save_status = utils.save_pil_image(image)
+        print(save_status)
+
+
 def display_images_from_folder(folder_path):
     if not os.listdir(folder_path):
         print(f"No files found in {folder_path}")
@@ -24,6 +39,7 @@ def display_images_from_folder(folder_path):
             image = Image.open(image_path)
             st.image(image, caption=image_file)
 
-#generate_carte_vitale_images(3)
-#display_images_from_folder('results')
-augmente_script.augment_images_in_folder('results','augmented_data','backup')
+
+gemerate_residence_card_images(1)
+display_images_from_folder('results')
+# augmente_script.augment_images_in_folder('results','augmented_data','backup')

@@ -3,12 +3,12 @@ import cv2
 import numpy as np
 import os
 
-def create_text_on_image(image_path, d_json):
+
+def create_text_on_image(image_path, d_json, font_size=110, pad=(0, 0, 0, 0), font_path="font/Arial.ttf"):
     dst_rgb = create_new_image_from_mask(image_path, d_json)
     dst_rgb_pil = Image.fromarray(dst_rgb)
     draw = ImageDraw.Draw(dst_rgb_pil)
-    font_path = "font/Arial.ttf"  # Adjust to your font file path
-    font_size = 110  # Font size
+    font_size = font_size  # Font size
     font = ImageFont.truetype(font_path, font_size)
 
     for annotation_data in d_json:
@@ -16,24 +16,30 @@ def create_text_on_image(image_path, d_json):
             for result in annotation['result']:
                 if 'text' in result['value'] and result['value']['text'].lower() != 'image':
                     text = result['value']['text']
-                    x = int(result['value']['x'] / 100 * result['original_width'])
-                    y = int(result['value']['y'] / 100 * result['original_height'])
-                    
+                    x = int(result['value']['x'] / 100 *
+                            result['original_width'])
+                    y = int(result['value']['y'] / 100 *
+                            result['original_height'])
+
                     # Calculate the text dimensions
-                    text_width = int(draw.textlength(text, font=font))  # Convert to integer
+                    # Convert to integer
+                    text_width = int(draw.textlength(text, font=font))
                     text_height = int(font_size)  # Convert to integer
 
                     # Create a transparent image for the text
-                    text_image = Image.new('RGBA', (text_width, text_height), (255, 255, 255, 0))
+                    text_image = Image.new(
+                        'RGBA', (text_width, text_height), (255, 255, 255, 0))
                     draw_text = ImageDraw.Draw(text_image)
                     draw_text.text((0, 0), text, font=font, fill=(0, 0, 0))
 
                     if result['value']['rectanglelabels'][0] == 'cardId':
                         text_image = text_image.rotate(90, expand=1)
 
-                    dst_rgb_pil.paste(text_image, (x, y), text_image)
-    
+                    dst_rgb_pil.paste(
+                        text_image, (x+pad[0]-pad[1], y+pad[2]-pad[3]), text_image)
+
     return dst_rgb_pil
+
 
 def create_new_image_from_mask(img_path, json_data):
     print("Reading original image...")
@@ -43,13 +49,14 @@ def create_new_image_from_mask(img_path, json_data):
 
     print("Creating mask from JSON data...")
     mask = create_mask_from_json(json_data, width, height)
-    
+
     print("Performing inpainting...")
     dst = cv2.inpaint(img, mask, 3, cv2.INPAINT_TELEA)
 
     print("Converting image to RGB...")
     dst_rgb = cv2.cvtColor(dst, cv2.COLOR_BGR2RGB)
-    return dst_rgb 
+    return dst_rgb
+
 
 def save_pil_image(image):
     try:
@@ -62,6 +69,7 @@ def save_pil_image(image):
         return f"Image saved successfully at {filepath}."
     except Exception as e:
         return f"Error in saving the image: {e}"
+
 
 def generate_file_path(base_path, extension, max_tries=100):
     folder, base_filename = os.path.split(base_path)
@@ -93,6 +101,7 @@ def create_mask_from_json(json_data, image_width, image_height):
             height = int(value['height'] / 100 * image_height)
 
             # Draw a white rectangle on the mask
-            mask_image = cv2.rectangle(mask_image, (x, y), (x + width, y + height), 255, -1)
+            mask_image = cv2.rectangle(
+                mask_image, (x, y), (x + width, y + height), 255, -1)
 
     return mask_image

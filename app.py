@@ -8,6 +8,19 @@ import generator
 import re
 
 
+def generate_residence_card_images(number_of_images):
+    image_path = 'titre_sej_n.jpg'
+    json_path = 'titre_sej.json'
+    for i in range(number_of_images):
+        print(f"Generating image {i+1}")
+        d_json = generator.generate_dict_with_replacement_carte_resid(
+            json_path)
+        image = utils.create_text_on_image(
+            image_path, d_json, 25, pad=(0, 0, 0, 5))
+        save_status = utils.save_pil_image(image)
+        print(save_status)
+
+
 def generate_carte_vitale_images(number_of_images):
     image_path = 'carte_vitale.jpg'
     json_path = 'carte_vitale.json'
@@ -71,8 +84,13 @@ def display_images(image_list, folder_path):
 
 
 # Streamlit interface
-st.title("Générateur de Carte Vitale")
+st.title("Générateur des Images")
 
+# Select type
+card_type = st.radio(
+    "Choisissez le type de carte à générer:",
+    ('Carte Vitale', 'Titre de Séjour')
+)
 number = st.number_input(
     "Combien de cartes vitale voulez-vous générer?", min_value=1, max_value=100, value=1)
 folder_res = 'results'
@@ -82,7 +100,10 @@ augmented_folder = 'augmented_data'
 # Display generated images
 st.header("Images Générées")
 if st.button('Générer des Images'):
-    generate_carte_vitale_images(number)
+    if card_type == 'Carte Vitale':
+        generate_carte_vitale_images(number)
+    else:
+        generate_residence_card_images(number)
     update_image_list(folder_res, 'generated_images', number)
 display_images(st.session_state['generated_images'], folder_path=folder_res)
 
