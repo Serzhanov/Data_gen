@@ -1,6 +1,5 @@
 import utils
 import generator
-import augmente_script
 import streamlit as st
 import os
 from PIL import Image

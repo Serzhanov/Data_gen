@@ -4,9 +4,9 @@ Ce projet permet l'annotation manuelle d'images de "Carte Vitale" et de "Titre d
 
 ## Fonctionnalités
 
-- **Annotation Manuelle avec Label Studio :** Annoter manuellement les images à l'aide de Label Studio et télécharger les fichiers JSON contenant les annotations.
-- **Génération de Texte :** Générer automatiquement du texte aléatoire sur les parties effacées des images avec un contrôle total sur le style, la taille et le placement de la police.
-- **Augmentation d'Image :** Appliquer différentes techniques d'augmentation d'image pour créer un jeu de données varié.
+- **Annotation Manuelle avec Label Studio :** Annotation manuellement les images à l'aide de Label Studio et télécharger les fichiers JSON contenant les annotations.
+- **Génération de Texte :** Généreration automatiquement du texte aléatoire sur les parties effacées des images avec un contrôle total sur le style, la taille et le placement de la police.
+- **Augmentation d'Image :** Appliquation différentes techniques d'augmentation d'image pour créer un jeu de données varié.
 - **Application Streamlit :** Une application Streamlit conviviale pour gérer les processus ci-dessus.
 
 ## Commencer
